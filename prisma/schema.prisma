@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+//make an appointment and then update it inside doctor's shcedule
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Specialty {
+  id      Int      @id @default(autoincrement())
+  name    String
+  doctors Doctor[]
+}
+
+model Doctor {
+  id          Int           @id @default(autoincrement())
+  name        String
+  crm         String
+  specialties Specialty[]
+  Schedule    Schedule[]
+  Appointment Appointment[]
+}
+
+model Schedule {
+  id        Int      @id @default(autoincrement())
+  doctor    Doctor   @relation(fields: [doctorId], references: [id])
+  doctorId  Int
+  startHour DateTime
+  endHour   DateTime
+}
+
+model Patient {
+  id          Int           @id @default(autoincrement())
+  name        String
+  Appointment Appointment[]
+}
+
+model Appointment {
+  id        Int      @id @default(autoincrement())
+  doctor    Doctor   @relation(fields: [doctorId], references: [id])
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  doctorId  Int
+  patientId Int
+  startHour DateTime
+  endHour   DateTime
+}
