@@ -1,46 +1,80 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-//make an appointment and then update it inside doctor's shcedule
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
-model Specialty {
-  id      Int      @id @default(autoincrement())
-  name    String
-  doctors Doctor[]
+model Contacts {
+  contactId         Int       @id @default(autoincrement())
+  createdAt         DateTime  @default(now())
+  modifiedAt        DateTime? @default(now())
+  patientId         Int
+  title             String?
+  firstName         String
+  middleInitial     String?
+  lastName          String?
+  phone             String
+  email             String
+  sex               String?
+  dateOfBirth       DateTime?
+  street            String
+  city              String
+  state             String
+  zip               String
+  relationToPatient String?
+  type              String
+  emergencyPriority String?
+  signature         String?
 }
 
-model Doctor {
-  id          Int           @id @default(autoincrement())
-  name        String
-  crm         String
-  specialties Specialty[]
-  Schedule    Schedule[]
-  Appointment Appointment[]
+model Patients {
+  id               Int       @id @default(autoincrement())
+  createdAt        DateTime  @default(now())
+  modifiedAt       DateTime? @default(now())
+  title            String?
+  firstName        String
+  middleInitial    String?
+  lastName         String
+  phone            String
+  email            String    @unique
+  sex              String
+  ssn              String
+  dateOfBirth      DateTime
+  street           String
+  city             String
+  state            String
+  zip              String
+  insuranceCompany String?
+  plan             String?
+  groupNumber      String?
+  cardHolder       String?
+  medications      Json?
+  allergies        Json?
+  surgeries        Json?
+  familyHistory    Json?
+  addictions       Json?
+  questionnaire    Json?
+  symptoms         Json?
+  signature        String
 }
 
-model Schedule {
-  id        Int      @id @default(autoincrement())
-  doctor    Doctor   @relation(fields: [doctorId], references: [id])
-  doctorId  Int
-  startHour DateTime
-  endHour   DateTime
-}
-
-model Patient {
-  id          Int           @id @default(autoincrement())
-  name        String
-  Appointment Appointment[]
+model schedule {
+  scheduleId       Int       @id
+  scheduleActivity String    @db.VarChar(255)
+  roomNumber       Int
+  providerGroup    String    @db.VarChar(255)
+  userId           Int
+  userName         String    @db.VarChar(255)
+  patientId        Int
+  scheduleDate     DateTime? @db.Date
+  scheduleFrom     DateTime? @db.DateTime(0)
+  scheduleTo       DateTime? @db.DateTime(0)
+  scheduleStatus   String?   @db.VarChar(255)
 }
 
 model Appointment {
