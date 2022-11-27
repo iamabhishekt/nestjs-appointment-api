@@ -3,12 +3,13 @@ import {
   IsEmail,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
 
-export class CreatePatientDto {
+export class CreateDoctorDto {
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
@@ -28,4 +29,8 @@ export class CreatePatientDto {
   @IsEmail()
   @ApiProperty()
   email: string;
+
+  @IsOptional()
+  @ApiProperty({ required: false })
+  profession?: string;
 }
